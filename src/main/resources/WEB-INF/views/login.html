@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+    <h2>Login</h2>
+    <#if logged??>
+        You are already logged in, ${username}!<br>
+    <#else>
+        <#if errorReason??>Error: ${errorReason}<br><br></#if>
+        <form action="/login" method="post">
+            Name:<input type="text" name="username"/><br/><br/>
+            Password:<input type="password" name="userpass"/><br/><br/>
+            <input type="submit" value="Login"/>
+        </form>
+    </#if>
+    <br>
+    <a href="index">Back</a>
+</body>
+</html>

@@ -1,0 +1,78 @@
+plugins {
+    id 'java'
+    id 'war'
+    id "org.hidetake.ssh" version "2.10.1"
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+war.archiveBaseName = 'ROOT'
+// Web directory, this overrides the default value "webapp"
+project.webAppDirName = 'src/main/resources'
+
+remotes {
+    release {
+        host = '68.183.219.245'
+        user = 'tomcat-download'
+        identity = file("${projectDir.toString()}/authorized_keys/tomcat-download.ppk")
+        knownHosts = allowAnyHosts
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'main'
+        }
+    }
+    test {
+        java {
+            srcDir 'test'
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.37'
+    compile group: 'org.apache.tomcat', name: 'tomcat-servlet-api', version: '9.0.37'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.21.Final'
+    compile group: 'com.google.inject', name: 'guice', version: '4.2.3'
+    compile group: 'com.google.inject.extensions', name: 'guice-servlet', version: '4.2.3'
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
+    compile group: 'org.freemarker', name: 'freemarker', version: '2.3.30'
+    compile group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
+    compile group: 'javax.mail', name: 'javax.mail-api', version: '1.6.2'
+    compile group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
+    compile group: 'javax.activation', name: 'activation', version: '1.1.1'
+    compile "org.flywaydb:flyway-core:6.5.7"
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
+
+    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+task deployToRelease(dependsOn: 'war') {
+    doLast {
+        ssh.run {
+            session(remotes.release) {
+                put from: "${war.destinationDirectory.get().toString()}/${war.archiveFileName.get()}", into: '/opt/tomcat/webapps/ROOT.war'
+            }
+        }
+    }
+}
+
+task explodedWar(type: Sync) {
+    into "${projectDir}/exploded"
+    with war
+}

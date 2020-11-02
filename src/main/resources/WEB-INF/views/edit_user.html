@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Secret Societies</title>
+</head>
+<body>
+<h1>Secret Societies</h1>
+<h2>Edit User</h2>
+<#if menu??>
+    ${menu}
+</#if>
+<br><br>
+<#if errorReason??>Error: ${errorReason}<br><br></#if>
+<form action="/edituser" method="post">
+    <input type="hidden" name="edit_user_id" value="${edit_user_id}">
+    Name:<input type="text" name="edit_username" value="${edit_username}"/><br/><br/>
+    E-mail:<input type="text" name="edit_usermail" value="${edit_usermail}"/><br/><br/>
+    <#if edit_enabled??>
+        <input type="checkbox" name="edit_enabled" value="true" checked>Enabled<br/><br/>
+    <#else>
+        <input type="checkbox" name="edit_enabled" value="true">Enabled<br/><br/>
+    </#if>
+    <input type="submit" value="Edit user"/>
+</form>
+<a href="/users">Back</a>
+</body>
+</html>

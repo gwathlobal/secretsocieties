@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title><#if title??>${title}</#if></title>
+</head>
+<body>
+    <#if title??><h3>${title}</h3></#if>
+    <#if message??>
+        ${message}
+    </#if>
+    <br><br>
+    <#if back_link??>
+        <a href="${back_link}">
+            <#if back_txt??>
+                ${back_txt}
+            <#else>
+                Back
+            </#if>
+        </a>
+    <#else>
+        <a href="/">Back</a>
+    </#if>
+</body>
+</html>

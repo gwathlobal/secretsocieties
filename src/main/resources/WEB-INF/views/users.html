@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Secret Societies</title>
+</head>
+<body>
+<h1>Secret Societies</h1>
+<h2>Users</h2>
+<#if menu??>
+    ${menu}
+</#if>
+<br><br>
+<form method="post">
+    <input type="hidden" name="command" value="add">
+    <input type="submit" value="Add user"/>
+</form>
+<#if content??>
+    ${content}
+</#if>
+</body>
+</html>

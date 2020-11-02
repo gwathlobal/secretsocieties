@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Secret Societies</title>
+</head>
+<body>
+<h1>Secret Societies</h1>
+<h2>Add User</h2>
+<#if menu??>
+    ${menu}
+</#if>
+<br><br>
+<#if errorReason??>Error: ${errorReason}<br><br></#if>
+<form action="/adduser" method="post">
+    Name:<input type="text" name="username"/><br/><br/>
+    Password:<input type="password" name="userpass"/><br/><br/>
+    E-mail:<input type="text" name="usermail"/><br/><br/>
+    <input type="submit" value="Add user"/>
+</form>
+<a href="/users">Back</a>
+</body>
+</html>

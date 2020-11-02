@@ -1,0 +1,1 @@
+insert into users (email, enabled, password, login) values (null, true, '$2a$10$2VcjsK7QVVAelWEuUb6EH.ExdX0zelA2mYldoeLZIf552FVtFGpDu', 'SuperAdmin');

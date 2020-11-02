@@ -1,0 +1,5 @@
+<#if logged??>
+    <a href="profile">${username}</a><#if roleSuperAdmin??> | <a href="users">Users</a></#if> | <a href="logout">Logout</a>
+<#else>
+    <a href="login">Login</a> | <a href="register">Register</a>
+</#if>

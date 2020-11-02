@@ -1,0 +1,45 @@
+1) Install JDK & Tomcat using this article: https://www.digitalocean.com/community/tutorials/install-tomcat-9-ubuntu-1804
+2) Add a tomcat-download user that shall be used to deploy WARs to the server
+   sudo adduser tomcat-download
+   sudo usermod -aG tomcat tomcat-download
+3) Add public SSH key for tomcat-download:
+   mkdir /home/tomcat-download/.ssh/
+   nano /home/tomcat-download/.ssh/authorized_keys
+The key is:
+ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAkclAVa7NcrCmHO+KfCoY/U0mWpOzR7+NJ/9uVtwWK2i1C6Zzhky1cS2UcR5l6riGbEx3yy6h4PvufEyr+pfUDa+WwBM2qeY4Spcybp+BinZ5SV4xXAlANG+AKPb64H8LuzgHqOy0QifFkkMPdOxyYm29EjxIcOrR3L38dxT4OpFGcRbKbcey8QHRXlUt4vI2bfY42de1e1LraQ0kBgLi5sE7lKWOQjyNoVPiGYryjuUlLuggTWOhI03Xh7/j53Mi7Y8+5i6FaRPUybbh55yT6Lh4ZFTP2eTO2Z+zH9eKRxKwi7e+qECoF/Z9tjFyqk90tpq+jciunXsBvAdUq7CFZw== rsa-key-20200831
+3) Add group write rights to the /opt/tomcat/webapps/ so that tomcat-download could write into it
+   sudo chmod g+w /opt/tomcat/webapps/
+4) Remove all unnecessary webapps from the server using Tomcat manager UI.
+5) Install PostgreSQL using this article: https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-20-04
+   The user & db name shall be db_webapp, the password is 123
+   The user in DB shall be created using the following command:
+   sudo -u postgres createuser -P -s -e db_webapp
+6) Install nginx and set up SSL connection there: https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04-ru
+
+   Open port 80 and 443 on the server.
+
+   User the following site configuration:
+
+   server {
+           listen 80;
+           listen [::]:80;
+           return 301 https://$host$request_uri;
+   }
+
+   server {
+           listen 443 ssl;
+           listen [::]:443 ssl;
+
+           ssl_certificate           /etc/nginx/ssl/nginx.crt;
+           ssl_certificate_key       /etc/nginx/ssl/nginx.key;
+
+           server_name secretsocieties.tk;
+
+           location / {
+                   proxy_pass http://localhost:8080;
+                   proxy_set_header Host $host;
+                   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                   proxy_set_header X-Forwarded-Proto $scheme;
+                   proxy_set_header X-Forwarded-Port $server_port;
+           }
+   }
